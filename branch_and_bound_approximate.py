@@ -2,7 +2,7 @@
 
 __author__ = "Ashot Vantsyan"
 __copyright__ = "Copyright (c) 2020, Diploma project"
-__version__ = "0.3"
+__version__ = "0.1"
 __maintainer__ = "Ashot Vantsyan"
 __email__ = "ashotvantsyan@gmail.com"
 __status__ = "Dev"
@@ -92,10 +92,12 @@ class Tree:
             matrix[self.name-1, self.root.name-1] = np.inf
             node_cost, self._matrix = get_matrix_cost(matrix)
             self._node_cost = node_cost + edge_cost + self.get_parent()._node_cost
+
     
     def get_leaf_with_minimal_cost(self) -> tuple:
-        minimal = (self.root._leafs[0], self.root._leafs[0]._node_cost)
-        for leaf in self.root._leafs[1:]:
+        leafs = list(set(self.root._leafs) & set(self._children))
+        minimal = (leafs[0], leafs[0]._node_cost)
+        for leaf in leafs[1:]:
             if leaf._node_cost < minimal[1]:
                 minimal = (leaf, leaf._node_cost)
         return minimal
@@ -122,15 +124,15 @@ def get_distance(matrix, city1, city2):
 def get_minimal_voyage(matrix, roads, debug=False):
     best_road = None
     minimal_distance = None
-    root = Tree(1, matrix)
-    node = root
+    node = root = Tree(1, matrix)
     while len(node.get_path()) < matrix.shape[0]:
         node.generate_child_nodes()
-        node, minimal_distance = root.get_leaf_with_minimal_cost()
+        node, minimal_distance = node.get_leaf_with_minimal_cost()
         best_road = node._path + (node._path[0],)
     return best_road, minimal_distance
 
 def main() -> None:
+    import time
     matrix = get_distance_matrix()
     roads = None
     road, distance = get_minimal_voyage(matrix, roads, debug=False)
