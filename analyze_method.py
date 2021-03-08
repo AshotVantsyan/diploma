@@ -59,7 +59,7 @@ def main() -> None:
                 command = subprocess.run(('python', f'{method}.py'), stdout=subprocess.PIPE, env=myenv, timeout=120)
                 end_time = time.time() - start_time
                 results = json.loads(command.stdout)
-                number_of_cities = len(results["road"])
+                number_of_cities = len(results["road"]) - 1
                 road = results["road"]
                 distance = results["distance"]
                 if method in exact_methods:
