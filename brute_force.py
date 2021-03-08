@@ -5,7 +5,7 @@ __copyright__ = "Copyright (c) 2020-2021, Diploma project"
 __email__ = "ashotvantsyan@gmail.com"
 __maintainer__ = "Ashot Vantsyan"
 __status__ = "Released"
-__version__ = "1.0"
+__version__ = "1.1"
 
 import os
 import json
@@ -43,7 +43,7 @@ def get_minimal_voyage(matrix: np.matrix, roads: Iterable, debug: bool = False) 
 def main() -> None:
     matrix = get_distance_matrix()
     roads = get_all_possible_roads(matrix)
-    road, distance = get_minimal_voyage(matrix, roads)
+    road, distance = get_minimal_voyage(matrix, roads, debug=True)
     print(json.dumps({"distance": distance, "road": road}))
 
 if __name__ == "__main__":
