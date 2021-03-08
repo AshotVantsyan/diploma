@@ -15,11 +15,11 @@ import numpy as np
 #    dist = np.ceil(np.sqrt ((X.reshape(n,1) - X.reshape(1,n))**2 +
 #                            (Y.reshape(n,1) - Y.reshape(1,n))**2))
 
-def generate_distance(number_of_cities: int) -> None:
-    matrix = np.random.uniform(1, 101, (number_of_cities, number_of_cities))
+def generate_distance(number_of_cities: int, file: str = "city_distances.csv", start: int = 1, end: int = 101) -> None:
+    matrix = np.random.uniform(start, end, (number_of_cities, number_of_cities))
     matrix = (matrix + matrix.T) // 2
     np.fill_diagonal(matrix, np.inf)
-    np.savetxt("city_distances.csv", matrix, delimiter=',')
+    np.savetxt(file, matrix, delimiter=',')
 
 def main() -> None:
     number_of_cities = int(input("Please enter city count:"))

@@ -7,13 +7,15 @@ __maintainer__ = "Ashot Vantsyan"
 __status__ = "Released"
 __version__ = "1.0"
 
+import os
 import json
 import numpy as np
 from typing import Iterable, Union
 from itertools import permutations
 
 def get_distance_matrix() -> np.matrix:
-    matrix = np.loadtxt("city_distances.csv", delimiter=",")
+    file = os.getenv("DISTANCE_FILE", "city_distances.csv")
+    matrix = np.loadtxt(file, delimiter=",")
     return np.matrix(matrix)
 
 def get_all_possible_roads(matrix: np.matrix) -> Iterable:
@@ -35,7 +37,7 @@ def get_minimal_voyage(matrix: np.matrix, roads: Iterable, debug: bool = False) 
             minimal_distance = distance
             best_road = road
     # Convert indexes to city numbers.
-    best_road = tuple(i+1 for i in (best_road + best_road[0:1]))
+    best_road = tuple(i + 1 for i in (best_road + best_road[0:1]))
     return best_road, minimal_distance
 
 def main() -> None:
