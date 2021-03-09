@@ -5,7 +5,7 @@ __copyright__ = "Copyright (c) 2020, Diploma project"
 __maintainer__ = "Ashot Vantsyan"
 __email__ = "ashotvantsyan@gmail.com"
 __status__ = "Released"
-__version__ = "1.0"
+__version__ = "1.1"
 
 import os
 import json
@@ -122,6 +122,12 @@ class Tree:
 def get_distance(matrix, city1, city2):
     return matrix[city1, city2]
 
+def print_tree(node: Tree) -> None:
+    node.print_node(debug=True)
+    if hasattr(node, "_children"):
+        for child in node._children:
+            print_tree(child)
+
 def get_minimal_voyage(matrix, roads, debug=False):
     best_road = None
     minimal_distance = None
@@ -131,6 +137,8 @@ def get_minimal_voyage(matrix, roads, debug=False):
         node.generate_child_nodes()
         node, minimal_distance = root.get_leaf_with_minimal_cost()
         best_road = node._path + (node._path[0],)
+    if debug or True:
+        print_tree(root)
     return best_road, minimal_distance
 
 def main() -> None:
