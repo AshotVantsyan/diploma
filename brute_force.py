@@ -43,7 +43,7 @@ def get_minimal_voyage(matrix: np.matrix, roads: Iterable, debug: bool = False) 
 def main() -> None:
     matrix = get_distance_matrix()
     roads = get_all_possible_roads(matrix)
-    road, distance = get_minimal_voyage(matrix, roads, debug=True)
+    road, distance = get_minimal_voyage(matrix, roads)
     print(json.dumps({"distance": distance, "road": road}))
 
 if __name__ == "__main__":
