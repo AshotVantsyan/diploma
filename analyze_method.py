@@ -38,7 +38,7 @@ def get_matrix_cost(matrix: np.matrix, debug=False) -> float:
     return float(cost)
 
 def main() -> None:
-    exact_methods = ("brute_force", "branch_and_bound")
+    exact_methods = ("brute_force", "branch_and_bound", "dynamic_programming", "linear_programming")
     approx_methods = ("branch_and_bound_approximate", "nearest_neighbor", "random_choice")
     message = "Methods:\n"
     for number, method in enumerate(exact_methods + approx_methods, start=1):
@@ -50,13 +50,13 @@ def main() -> None:
     results_file = open(os.path.join("analysis", f"{method}.csv"), "w")
     results_file.write("NumberOfCities,Time,Accuracy,Road\n")
     results_file.close()
-    for root, _, files in os.walk("input_data"):
-        for file in files:
+    for root, _, files in sorted(os.walk("input_data")):
+        for file in sorted(files):
             myenv = os.environ.copy()
             myenv['DISTANCE_FILE'] = os.path.join(root, file)
             try:
                 start_time = time.time()
-                command = subprocess.run(('python', f'{method}.py'), stdout=subprocess.PIPE, env=myenv, timeout=120)
+                command = subprocess.run((sys.executable, f'{method}.py'), stdout=subprocess.PIPE, env=myenv, timeout=120)
                 end_time = time.time() - start_time
                 results = json.loads(command.stdout)
                 number_of_cities = len(results["road"]) - 1
