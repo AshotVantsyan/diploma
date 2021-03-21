@@ -5,7 +5,7 @@ __copyright__ = "Copyright (c) 2020, Diploma project"
 __maintainer__ = "Ashot Vantsyan"
 __email__ = "ashotvantsyan@gmail.com"
 __status__ = "Released"
-__version__ = "1.1"
+__version__ = "1.1.1"
 
 import os
 import json
@@ -137,7 +137,7 @@ def get_minimal_voyage(matrix, roads, debug=False):
         node.generate_child_nodes()
         node, minimal_distance = root.get_leaf_with_minimal_cost()
         best_road = node._path + (node._path[0],)
-    if debug or True:
+    if debug:
         print_tree(root)
     return best_road, minimal_distance
 
