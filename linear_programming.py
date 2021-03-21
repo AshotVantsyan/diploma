@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
 __author__ = "Ashot Vantsyan"
-__copyright__ = "Copyright (c) 2020, Diploma project"
-__version__ = "0.1"
+__copyright__ = "Copyright (c) 2021, Diploma project"
+__version__ = "1.0"
 __maintainer__ = "Ashot Vantsyan"
 __email__ = "ashotvantsyan@gmail.com"
-__status__ = "Dev"
+__status__ = "Released"
 
 import os
 import json
