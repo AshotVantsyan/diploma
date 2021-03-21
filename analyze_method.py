@@ -2,10 +2,10 @@
 
 __author__ = "Ashot Vantsyan"
 __copyright__ = "Copyright (c) 2020, Diploma project"
-__version__ = "0.1.1"
+__version__ = "1.0"
 __maintainer__ = "Ashot Vantsyan"
 __email__ = "ashotvantsyan@gmail.com"
-__status__ = "Dev"
+__status__ = "Released"
 
 import os
 import sys
@@ -39,7 +39,7 @@ def get_matrix_cost(matrix: np.matrix, debug=False) -> float:
 
 def main() -> None:
     exact_methods = ("brute_force", "branch_and_bound", "dynamic_programming", "linear_programming")
-    approx_methods = ("branch_and_bound_approximate", "nearest_neighbor", "random_choice")
+    approx_methods = ("simulated_annealing", "nearest_neighbor", "random_choice")
     message = "Methods:\n"
     for number, method in enumerate(exact_methods + approx_methods, start=1):
         message += f"{number}: {method.replace('_', ' ').capitalize()}\n"
@@ -48,7 +48,7 @@ def main() -> None:
     assert method in range(1, len(exact_methods) + len(approx_methods) + 1), "Incorrect choice"
     method = (exact_methods + approx_methods)[method-1]
     results_file = open(os.path.join("analysis", f"{method}.csv"), "w")
-    results_file.write("NumberOfCities,Time,Accuracy,Road\n")
+    results_file.write("NumberOfCities,Time,Accuracy,Distance\n")
     results_file.close()
     for root, _, files in sorted(os.walk("input_data")):
         for file in sorted(files):
@@ -56,19 +56,20 @@ def main() -> None:
             myenv['DISTANCE_FILE'] = os.path.join(root, file)
             try:
                 start_time = time.time()
-                command = subprocess.run((sys.executable, f'{method}.py'), stdout=subprocess.PIPE, env=myenv, timeout=120)
+                command = subprocess.run((sys.executable, f'{method}.py'), stdout=subprocess.PIPE, env=myenv, timeout=480)
                 end_time = time.time() - start_time
                 results = json.loads(command.stdout)
                 number_of_cities = len(results["road"]) - 1
-                road = results["road"]
                 distance = results["distance"]
+                if hasattr(results, "time"):
+                    end_time = results["time"]
                 if method in exact_methods:
                     accuracy = "100%"
                 else:
                     matrix = get_distance_matrix(myenv['DISTANCE_FILE'])
                     accuracy = "%s%%" % (get_matrix_cost(matrix) / distance * 100)
                 with open(os.path.join("analysis", f"{method}.csv"), "a") as results_file:
-                    results_file.write(f"{number_of_cities},{end_time},{accuracy},\"{road}\"\n")
+                    results_file.write(f"{number_of_cities},{end_time},{accuracy},\"{distance}\"\n")
             except subprocess.TimeoutExpired:
                 print(f"The last checked file is: {file}")
                 results_file.close()
