@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
 __author__ = "Ashot Vantsyan"
-__copyright__ = "Copyright (c) 2020, Diploma project"
-__version__ = "1.0"
+__copyright__ = "Copyright (c) 2020-2021, Diploma project"
+__version__ = "1.0.8"
 __maintainer__ = "Ashot Vantsyan"
 __email__ = "ashotvantsyan@gmail.com"
 __status__ = "Released"
@@ -39,7 +39,7 @@ def get_matrix_cost(matrix: np.matrix, debug=False) -> float:
 
 def main() -> None:
     exact_methods = ("brute_force", "branch_and_bound", "dynamic_programming", "linear_programming")
-    approx_methods = ("simulated_annealing", "nearest_neighbor", "random_choice")
+    approx_methods = ("simulated_annealing", "nearest_neighbor", "random_choice", "ant_colony")
     message = "Methods:\n"
     for number, method in enumerate(exact_methods + approx_methods, start=1):
         message += f"{number}: {method.replace('_', ' ').capitalize()}\n"
