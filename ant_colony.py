@@ -2,10 +2,10 @@
 
 __author__ = "Ashot Vantsyan"
 __copyright__ = "Copyright (c) 2020, Diploma project"
-__version__ = "0.1"
+__version__ = "1.0"
 __maintainer__ = "Ashot Vantsyan"
 __email__ = "ashotvantsyan@gmail.com"
-__status__ = "Dev"
+__status__ = "Released"
 
 import os
 import time
@@ -16,8 +16,8 @@ import numpy as np
 distance_coeff = 8
 pheromone_coeff = 8
 evaporation_coeff = 0.80
-generation_count = 20
-initial_pheromone = 1
+generation_count = 5
+initial_pheromone = 2
 
 def get_distance_matrix() -> np.matrix:
     file = os.getenv("DISTANCE_FILE", "city_distances.csv")
