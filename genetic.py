@@ -2,10 +2,10 @@
 
 __author__ = "Ashot Vantsyan"
 __copyright__ = "Copyright (c) 2020, Diploma project"
-__version__ = "0.2"
+__version__ = "1.0"
 __maintainer__ = "Ashot Vantsyan"
 __email__ = "ashotvantsyan@gmail.com"
-__status__ = "Dev"
+__status__ = "Released"
 
 import os
 import time
@@ -132,17 +132,18 @@ def get_voyage():
             road = Chromosome.population[0].road
             generation = 0
         generation += 1
-    return (int(distance), tuple(map(int, road)) + (int(road[0]),))
+    road = tuple(int(i + 1) for i in tuple(map(int, road)) + (int(road[0]),))
+    return int(distance), road
 
 def main() -> None:
-    start_time = time.time()
+    start = time.time()
     distance, road = get_voyage()
-    end = time.time() - start_time
+    end = round(time.time() - start, 2)
     print(json.dumps({"distance": distance, "road": road, "time": end}))
 
 
 if __name__ == "__main__":
-    debug = True
+    debug = False
     matrix = get_distance_matrix()
     population_size = matrix.shape[0]
     main()

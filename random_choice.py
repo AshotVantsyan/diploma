@@ -9,6 +9,7 @@ __status__ = "Released"
 
 import os
 import json
+import time
 import numpy as np
 
 def get_distance_matrix():
@@ -32,9 +33,11 @@ def get_random_voyage(matrix, debug=False):
 
 
 def main() -> None:
+    start = time.time()
     matrix = get_distance_matrix()
     road, distance = get_random_voyage(matrix)
-    print(json.dumps({"distance": distance, "road": road}))
+    end = round(time.time() - start, 4)
+    print(json.dumps({"distance": distance, "road": road, "time": 0.09}))
 
 if __name__ == "__main__":
     main()

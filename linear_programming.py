@@ -9,6 +9,7 @@ __status__ = "Released"
 
 import os
 import json
+import time
 import numpy as np
 import pulp as lp
 from typing import Iterable
@@ -57,12 +58,14 @@ def get_minimal_voyage(problem: lp.LpProblem, x: lp.LpVariable, cities: Iterable
     return tuple(voyage), distance
 
 def main() -> None:
+    start = time.time()
     matrix = get_distance_matrix()
     cities, distances = get_distances(matrix)
     problem = state_problem()
     x, _ = define_variables_and_constraints(problem, distances, cities)
     road, distance = get_minimal_voyage(problem, x, cities)
-    print(json.dumps({"distance": distance, "road": road}))
+    end = round(time.time() - start, 2)
+    print(json.dumps({"distance": distance, "road": road, "time": end}))
 
 if __name__ == "__main__":
     main()

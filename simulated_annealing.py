@@ -55,13 +55,14 @@ def get_voyage(matrix, debug=False):
             break
         if debug:
             print(f"Temperature: {temperature}, Distance: {distance}")
+    road = tuple(int(i + 1) for i in road)
     return road, distance
 
 def main() -> None:
     matrix = get_distance_matrix()
     start = time.time()
     road, distance = get_voyage(matrix)
-    end = time.time() - start
+    end = round(time.time() - start, 2)
     print(json.dumps({"distance": distance, "road": road, "time": end}))
 
 if __name__ == "__main__":

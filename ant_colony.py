@@ -131,7 +131,7 @@ def main() -> None:
             generation = generation_count
         else:
             generation -= 1
-    end = time.time() - start_time
+    end = round(time.time() - start_time, 2)
     print(json.dumps({"distance": distance, "road": road, "time": end}))
 
 

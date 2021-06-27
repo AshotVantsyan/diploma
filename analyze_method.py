@@ -39,7 +39,7 @@ def get_matrix_cost(matrix: np.matrix, debug=False) -> float:
 
 def main() -> None:
     exact_methods = ("brute_force", "branch_and_bound", "dynamic_programming", "linear_programming")
-    approx_methods = ("simulated_annealing", "nearest_neighbor", "random_choice", "ant_colony", "genetic")
+    approx_methods = ("simulated_annealing", "nearest_neighbor", "random_choice", "ant_colony", "genetic", "rnn")
     message = "Methods:\n"
     for number, method in enumerate(exact_methods + approx_methods, start=1):
         message += f"{number}: {method.replace('_', ' ').capitalize()}\n"
@@ -67,6 +67,7 @@ def main() -> None:
                     accuracy = "100%"
                 else:
                     matrix = get_distance_matrix(myenv['DISTANCE_FILE'])
+                    print(get_matrix_cost(matrix))
                     accuracy = "%s%%" % (get_matrix_cost(matrix) / distance * 100)
                 with open(os.path.join("analysis", f"{method}.csv"), "a") as results_file:
                     results_file.write(f"{number_of_cities},{end_time},{accuracy},\"{distance}\"\n")

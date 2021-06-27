@@ -9,6 +9,7 @@ __version__ = "1.1.1"
 
 import os
 import json
+import time
 import numpy as np
 from typing import Optional
 
@@ -142,10 +143,12 @@ def get_minimal_voyage(matrix, roads, debug=False):
     return best_road, minimal_distance
 
 def main() -> None:
+    start = time.time()
     matrix = get_distance_matrix()
     roads = None
     road, distance = get_minimal_voyage(matrix, roads)
-    print(json.dumps({"distance": distance, "road": road}))
+    end = round(time.time() - start, 2)
+    print(json.dumps({"distance": distance, "road": road, "time": end}))
 
 if __name__ == "__main__":
     main()

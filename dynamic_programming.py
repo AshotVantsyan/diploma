@@ -10,6 +10,7 @@ __status__ = "Released"
 import os
 import sys
 import json
+import time
 import copy
 import numpy as np
 
@@ -56,9 +57,11 @@ def get_minimal_voyage(matrix: np.matrix) -> tuple:
     return road, distance
 
 def main():
+    start = time.time()
     matrix = get_distance_matrix()
     road, distance = get_minimal_voyage(matrix)
-    print(json.dumps({"distance": distance, "road": road}))
+    end = round(time.time() - start, 2)
+    print(json.dumps({"distance": distance, "road": road, "time": end}))
 
 
 if __name__ == '__main__':

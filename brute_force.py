@@ -9,6 +9,7 @@ __version__ = "1.1"
 
 import os
 import json
+import time
 import numpy as np
 from typing import Iterable, Union
 from itertools import permutations
@@ -41,10 +42,12 @@ def get_minimal_voyage(matrix: np.matrix, roads: Iterable, debug: bool = False) 
     return best_road, minimal_distance
 
 def main() -> None:
+    start = time.time()
     matrix = get_distance_matrix()
     roads = get_all_possible_roads(matrix)
     road, distance = get_minimal_voyage(matrix, roads)
-    print(json.dumps({"distance": distance, "road": road}))
+    end = round(time.time() - start, 2)
+    print(json.dumps({"distance": distance, "road": road, "time": end}))
 
 if __name__ == "__main__":
     main()
