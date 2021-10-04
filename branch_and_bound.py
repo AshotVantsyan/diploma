@@ -2,16 +2,20 @@
 
 __author__ = "Ashot Vantsyan"
 __copyright__ = "Copyright (c) 2020, Diploma project"
-__version__ = "0.3"
 __maintainer__ = "Ashot Vantsyan"
 __email__ = "ashotvantsyan@gmail.com"
-__status__ = "Dev"
+__status__ = "Released"
+__version__ = "1.1.1"
 
+import os
+import json
+import time
 import numpy as np
 from typing import Optional
 
 def get_distance_matrix() -> np.matrix:
-    matrix = np.loadtxt("city_distances.csv", delimiter=",")
+    file = os.getenv("DISTANCE_FILE", "city_distances.csv")
+    matrix = np.loadtxt(file, delimiter=",")
     return np.matrix(matrix)
 
 def get_matrix_cost(matrix: np.matrix, debug=False) -> tuple:
@@ -35,7 +39,7 @@ def get_matrix_cost(matrix: np.matrix, debug=False) -> tuple:
 
 class Tree:
 
-    def __init__(self, node_name: int, matrix: Optional[np.matrix] = None, parent: Optional['Tree'] = None) -> None:
+    def __init__(self, node_name: int, matrix: Optional[np.matrix] = None, parent: Optional['Tree'] = None, debug: bool = False) -> None:
         self.name = node_name
         self._parent = parent
         self._children = []
@@ -52,7 +56,7 @@ class Tree:
             assert not isinstance(matrix, np.matrix), "You must not specify initial matrix for non-root"
             self.root._leafs.append(self)
             self.get_parent().add_child(self)
-        self.set_cost()
+        self.set_cost(debug=debug)
 
     def get_path(self) -> tuple:
         return self._path
@@ -78,10 +82,10 @@ class Tree:
         while self.generate_next_node() is not None:
             pass
         
-    def set_cost(self) -> None:
+    def set_cost(self, debug: bool = False) -> None:
         if self is self.root:
             matrix = self.get_matrix()
-            self._node_cost, self._matrix = get_matrix_cost(matrix)
+            self._node_cost, self._matrix = get_matrix_cost(matrix, debug=debug)
         else:
             matrix = self.get_parent().get_matrix()
             edge_cost = matrix[self.get_parent().name-1, self.name-1]
@@ -90,7 +94,7 @@ class Tree:
             matrix[:,self.name-1] = np.inf
             matrix[self.name-1, self.get_parent().name-1] = np.inf
             matrix[self.name-1, self.root.name-1] = np.inf
-            node_cost, self._matrix = get_matrix_cost(matrix)
+            node_cost, self._matrix = get_matrix_cost(matrix, debug=debug)
             self._node_cost = node_cost + edge_cost + self.get_parent()._node_cost
     
     def get_leaf_with_minimal_cost(self) -> tuple:
@@ -106,7 +110,7 @@ class Tree:
     def __repr__(self):
         return f"<Node {self.name}: path - {self._path}, cost - {self._node_cost}>"
 
-    def print_node(self, debug=False) -> None:
+    def print_node(self, debug: bool = False) -> None:
         prefix = "  " * (len(self._path) - 1)
         print(f"{prefix}<Node {self.name}: path - {self._path}, cost - {self._node_cost}>")
         if debug:
@@ -119,22 +123,32 @@ class Tree:
 def get_distance(matrix, city1, city2):
     return matrix[city1, city2]
 
+def print_tree(node: Tree) -> None:
+    node.print_node(debug=True)
+    if hasattr(node, "_children"):
+        for child in node._children:
+            print_tree(child)
+
 def get_minimal_voyage(matrix, roads, debug=False):
     best_road = None
     minimal_distance = None
-    root = Tree(1, matrix)
+    root = Tree(1, matrix, debug=debug)
     node = root
     while len(node.get_path()) < matrix.shape[0]:
         node.generate_child_nodes()
         node, minimal_distance = root.get_leaf_with_minimal_cost()
         best_road = node._path + (node._path[0],)
+    if debug:
+        print_tree(root)
     return best_road, minimal_distance
 
 def main() -> None:
+    start = time.time()
     matrix = get_distance_matrix()
     roads = None
-    road, distance = get_minimal_voyage(matrix, roads, debug=False)
-    print(road, distance)
+    road, distance = get_minimal_voyage(matrix, roads)
+    end = round(time.time() - start, 2)
+    print(json.dumps({"distance": distance, "road": road, "time": end}))
 
 if __name__ == "__main__":
     main()

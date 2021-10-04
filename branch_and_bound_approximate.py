@@ -7,11 +7,14 @@ __maintainer__ = "Ashot Vantsyan"
 __email__ = "ashotvantsyan@gmail.com"
 __status__ = "Dev"
 
+import os
+import json
 import numpy as np
 from typing import Optional
 
 def get_distance_matrix() -> np.matrix:
-    matrix = np.loadtxt("city_distances.csv", delimiter=",")
+    file = os.getenv("DISTANCE_FILE", "city_distances.csv")
+    matrix = np.loadtxt(file, delimiter=",")
     return np.matrix(matrix)
 
 def get_matrix_cost(matrix: np.matrix, debug=False) -> tuple:
@@ -124,7 +127,7 @@ def get_distance(matrix, city1, city2):
 def get_minimal_voyage(matrix, roads, debug=False):
     best_road = None
     minimal_distance = None
-    node = root = Tree(1, matrix)
+    node = Tree(1, matrix)
     while len(node.get_path()) < matrix.shape[0]:
         node.generate_child_nodes()
         node, minimal_distance = node.get_leaf_with_minimal_cost()
@@ -136,7 +139,7 @@ def main() -> None:
     matrix = get_distance_matrix()
     roads = None
     road, distance = get_minimal_voyage(matrix, roads, debug=False)
-    print(road, distance)
+    print(json.dumps({"distance": distance, "road": road}))
 
 if __name__ == "__main__":
     main()
